@@ -12,6 +12,10 @@
     margin: 2rem 0 10rem 0;
 }
 
+.headerContainer.listMode {
+    margin: 2rem 0 0 0 ;
+}
+
 .headerList {
     display: flex;
     gap: 2rem;
@@ -100,4 +104,45 @@
     top: 0rem;
     left: 0rem;
     z-index: 1;
+}
+
+.options {
+    position: absolute;
+    top: 4.5rem;
+    z-index: 2;
+    background: #FFF;
+    color: gray;
+    border-radius: .5rem;
+    filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.1));
+    font-size: 1.4rem;
+}
+
+.optionsItem {
+    width: 20rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1rem;
+}
+
+.optionsCounter {
+    width: 10rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 1.2rem;
+    color: #000;
+}
+
+.optionsCounterBtn {
+    width: 3rem;
+    height: 3rem;
+    border: 1px solid #0072c2;
+    cursor: pointer;
+    color: #0072c2;
+    background: #FFF;
+}
+
+.optionsCounterBtn:disabled {
+    cursor: not-allowed;
 }

@@ -1,7 +1,11 @@
+import { Header } from "../../components/Header/Index";
+import { Navbar } from "../../components/Navbar/Index";
+
 export function List() {
     return (
         <div>
-            <h1>List</h1>
+            <Navbar />
+            <Header type={"list"} /> 
         </div>
     )
 }
