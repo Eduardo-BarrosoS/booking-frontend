@@ -21,7 +21,7 @@ interface IHeaderReducer {
 }
 
 interface IHeaderProps {
-    type: string
+    type?: string
 }
 
 export function Header({ type }: IHeaderProps) {
@@ -45,7 +45,7 @@ export function Header({ type }: IHeaderProps) {
         openOptions: false,
         options: {
             adult: 1,
-            children: 3,
+            children: 0,
             room: 1
         }
     }
@@ -178,7 +178,7 @@ export function Header({ type }: IHeaderProps) {
                                         <span>Children</span>
                                         <div className={styles.optionsCounter}>
                                             <button
-                                                disabled={state.options.children == 0}
+                                                disabled={state.options.children <= 0}
                                                 className={styles.optionsCounterBtn}
                                                 onClick={() => handleOption("children", "d")}
                                             >-</button>
