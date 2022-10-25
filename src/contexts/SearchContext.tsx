@@ -1,20 +1,25 @@
-// import { createContext, ReactNode } from "react"
+import { createContext, ReactNode } from "react"
 
 
-// interface ISearchContext {
+interface ISearchContext {
     
-// }
+}
 
-// export const searchContext = createContext({} as ISearchContext)
+interface SearchContextProviderProps {
+    children: ReactNode,
+}
 
-// export function SearchContextProvider( Children: ReactNode) {
+export const searchContext = createContext({} as ISearchContext)
+
+export function SearchContextProvider( { children }: SearchContextProviderProps) {
 
     
-//     return (
-//         <searchContext.Provider 
-//             value={}
-//         >
-//             {Children}
-//         </searchContext.Provider>
-//         )
-//     }
+
+    return (
+        <searchContext.Provider 
+            value={}
+        >
+            {children}
+        </searchContext.Provider>
+        )
+    }
