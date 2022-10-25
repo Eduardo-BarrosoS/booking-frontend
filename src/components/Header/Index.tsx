@@ -1,29 +1,16 @@
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faBed, faCalendarDays, faCar, faPerson, faPlane, faTaxi } from "@fortawesome/free-solid-svg-icons"
-import { DateRange, DateRangeProps, Range } from "react-date-range"
-import { useContext, useReducer, useState } from "react";
+import { format } from "date-fns";
+import { DateRange } from "react-date-range"
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { SearchContext } from "../../contexts/SearchContext";
 
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css';
-import styles from "./styles.module.css"
-import { format } from "date-fns";
-import { Navigate, useNavigate } from "react-router-dom";
-import { dateAction, destinationAction, openDateAction, openOptionsAction, optionsAction } from "../../reducers/reserve/action";
-import { SearchReducer } from "../../reducers/reserve/reducer";
-import { SearchContext } from "../../contexts/SearchContext";
 
-export interface ISearchStateReducer {
-    destination: string;
-    openDate: boolean;
-    date: Range[];
-    openOptions: boolean;
-    options: {
-        adult: number;
-        children: number;
-        room: number
-    }
-}
+import styles from "./styles.module.css"
 
 interface IHeaderProps {
     type?: string
@@ -98,7 +85,7 @@ export function Header({ type }: IHeaderProps) {
                                 className={styles.headerSearchText}> {format(searchState.date[0].startDate!, 'MM/dd/yyyy')} to {format(searchState.date[0].endDate!, 'MM/dd/yyyy')} </span>
                                 {searchState.openDate && <div onClick={() => openDateDispatch() } className={styles.closeDateRange}></div>}
                                 {searchState.openDate && <DateRange
-                                    className={styles.date}
+                                    className={styles.dateRenge}
                                     editableDateInputs={true}
                                     onChange={item => dateDispatch( item.selection )}
                                     moveRangeOnFirstSelection={false}

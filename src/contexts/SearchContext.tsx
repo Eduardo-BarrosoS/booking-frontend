@@ -1,10 +1,19 @@
 import { createContext, ReactNode, useReducer } from "react"
 import { Range } from "react-date-range";
-import { ISearchStateReducer } from "../components/Header/Index";
 import { dateAction, destinationAction, openDateAction, openOptionsAction, optionsAction } from "../reducers/reserve/action";
 import { SearchReducer } from "../reducers/reserve/reducer";
 
-
+export interface ISearchStateReducer {
+    destination: string;
+    openDate: boolean;
+    date: Range[];
+    openOptions: boolean;
+    options: {
+        adult: number;
+        children: number;
+        room: number
+    }
+}
 interface ISearchContext {
     searchState: ISearchStateReducer,
     destinationDispatch: (destination: string) => void,

@@ -22,9 +22,6 @@
     top: 1rem;
 }
 
-.listResult {
-    flex: 3;
-}
 
 .lsTitle {
     font-size: 2rem;
@@ -49,9 +46,14 @@
     padding: 0.5rem;
     font-size: 1.4rem;
     font-weight: 600;
+    outline: none;
 }
 
-.lsItem span {
+.lsItem input:focus {
+    border: 2px solid #0072c2;
+}
+
+.lsItem>span {
     height: 3rem;
     padding: 0.5rem;
     background: #FFF;
@@ -61,3 +63,64 @@
     font-size: 1.4rem;
     font-weight: 600;
 }
+
+.dateRenge {
+    position: absolute;
+    top: 4.5rem;
+    z-index: 1;
+}
+
+.closeDateRange {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0rem;
+    left: 0rem;
+    z-index: 2;
+}
+
+.lsOptions {
+    padding: 1rem;
+}
+
+.lsOptionItem {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    color: #555;
+    font-size: 1.2rem;
+    outline: #0072c2;
+}
+
+.lsOptionInput {
+    width: 5rem;
+    border-radius: .5rem;
+}
+
+.lsOptionInput:focus {
+    border: 1px solid #0072c2;
+}
+
+.lsOptionItem>span {
+    font-size: 1.4rem;
+}
+
+.listSearch>button {
+    padding: 1rem;
+    background: #0072c2;
+    color: #FFF;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+    font-size: 1.6rem;
+    font-weight: 600;
+    transition: .5s ease-in-out;
+    border-radius: .5rem;
+}
+
+.listSearch>button:hover {
+    transform: scale(1.05);
+}
+    .listResult {
+        flex: 3;
+    }
