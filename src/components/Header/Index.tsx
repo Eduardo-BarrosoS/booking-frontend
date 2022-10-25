@@ -2,7 +2,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faBed, faCalendarDays, faCar, faPerson, faPlane, faTaxi } from "@fortawesome/free-solid-svg-icons"
 import { DateRange, DateRangeProps, Range } from "react-date-range"
-import { useReducer, useState } from "react";
+import { useContext, useReducer, useState } from "react";
 
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css';
@@ -11,8 +11,9 @@ import { format } from "date-fns";
 import { Navigate, useNavigate } from "react-router-dom";
 import { dateAction, destinationAction, openDateAction, openOptionsAction, optionsAction } from "../../reducers/reserve/action";
 import { SearchReducer } from "../../reducers/reserve/reducer";
+import { SearchContext } from "../../contexts/SearchContext";
 
-export interface IHeaderReducer {
+export interface ISearchStateReducer {
     destination: string;
     openDate: boolean;
     date: Range[];
@@ -29,37 +30,19 @@ interface IHeaderProps {
 }
 
 export function Header({ type }: IHeaderProps) {
-    const initialValuesReducer = {
-        destination: '',
-        openDate: false,
-        date: [
-            {
-                startDate: new Date(),
-                endDate: new Date(),
-                key: 'selection'
-            }
-        ],
-        openOptions: false,
-        options: {
-            adult: 1,
-            children: 0,
-            room: 1
-        }
-    }
-
-    const [state, dispatch] = useReducer( SearchReducer, initialValuesReducer);
-
+    
     const navigate = useNavigate()
+    const { searchState, openDateDispatch, destinationDispatch, openOptionsDispatch, optionsDispatch, dateDispatch} = useContext(SearchContext)
 
     function handleOption(name: string, operation: string) {
-        dispatch( optionsAction(name, operation) )
+        optionsDispatch(name, operation)
     }
 
     function handleSearch () {
         navigate("/hotels", { state: { 
-            destination: state.destination, 
-            date: state.date,
-            options: state.options,
+            destination: searchState.destination, 
+            date: searchState.date,
+            options: searchState.options,
         } } )
     }
 
@@ -105,23 +88,21 @@ export function Header({ type }: IHeaderProps) {
                                     type="text" 
                                     placeholder="Where are you going?"
                                     className={styles.headerSearchInput}
-                                    onChange={(e) => {
-                                        dispatch( destinationAction(e.target.value as string) )
-                                    }}
+                                    onChange={(e) => destinationDispatch(e.target.value as string)}
                                      />
                             </div>
                             <div className={styles.headerSearchItem}>
 
                                 <FontAwesomeIcon icon={faCalendarDays} className={styles.headerIcon} />
-                                <span onClick={() => dispatch( openDateAction()) } 
-                                className={styles.headerSearchText}> {format(state.date[0].startDate!, 'MM/dd/yyyy')} to {format(state.date[0].endDate!, 'MM/dd/yyyy')} </span>
-                                {state.openDate && <div onClick={() => dispatch( openDateAction())} className={styles.closeDateRange}></div>}
-                                {state.openDate && <DateRange
+                                <span onClick={() => openDateDispatch() } 
+                                className={styles.headerSearchText}> {format(searchState.date[0].startDate!, 'MM/dd/yyyy')} to {format(searchState.date[0].endDate!, 'MM/dd/yyyy')} </span>
+                                {searchState.openDate && <div onClick={() => openDateDispatch() } className={styles.closeDateRange}></div>}
+                                {searchState.openDate && <DateRange
                                     className={styles.date}
                                     editableDateInputs={true}
-                                    onChange={item => { dispatch( dateAction( item.selection ) ) }}
+                                    onChange={item => dateDispatch( item.selection )}
                                     moveRangeOnFirstSelection={false}
-                                    ranges={state.date}
+                                    ranges={searchState.date}
                                     minDate={new Date()}
                                 />}
 
@@ -129,21 +110,21 @@ export function Header({ type }: IHeaderProps) {
                             <div className={styles.headerSearchItem}>
                                 <FontAwesomeIcon icon={faPerson} className={styles.headerIcon} />
                                 <span
-                                    onClick={() => dispatch( openOptionsAction() )}
+                                    onClick={() => openOptionsDispatch() }
                                     className={styles.headerSearchText}>
-                                    {` ${state.options.adult} adult ${state.options.children} children ${state.options.room} room`}
+                                    {` ${searchState.options.adult} adult ${searchState.options.children} children ${searchState.options.room} room`}
                                 </span>
-                                {state.openOptions && <div onClick={() => dispatch( openOptionsAction() )} className={styles.closeDateRange}></div>}
-                                {state.openOptions && <div className={styles.options}>
+                                {searchState.openOptions && <div onClick={() => openOptionsDispatch()} className={styles.closeDateRange}></div>}
+                                {searchState.openOptions && <div className={styles.options}>
                                     <div className={styles.optionsItem} >
                                         <span>Adult</span>
                                         <div className={styles.optionsCounter}>
                                             <button
-                                                disabled={state.options.adult <= 1}
+                                                disabled={searchState.options.adult <= 1}
                                                 className={styles.optionsCounterBtn}
                                                 onClick={() => handleOption("adult", "d")}
                                             >-</button>
-                                            <span>{state.options.adult}</span>
+                                            <span>{searchState.options.adult}</span>
                                             <button className={styles.optionsCounterBtn}
                                                 onClick={() => handleOption("adult", "i")}
                                             >+</button>
@@ -153,11 +134,11 @@ export function Header({ type }: IHeaderProps) {
                                         <span>Children</span>
                                         <div className={styles.optionsCounter}>
                                             <button
-                                                disabled={state.options.children <= 0}
+                                                disabled={searchState.options.children <= 0}
                                                 className={styles.optionsCounterBtn}
                                                 onClick={() => handleOption("children", "d")}
                                             >-</button>
-                                            <span>{state.options.children}</span>
+                                            <span>{searchState.options.children}</span>
                                             <button
                                                 className={styles.optionsCounterBtn}
                                                 onClick={() => handleOption("children", "i")}
@@ -168,11 +149,11 @@ export function Header({ type }: IHeaderProps) {
                                         <span>Room</span>
                                         <div className={styles.optionsCounter}>
                                             <button
-                                                disabled={state.options.room <= 1}
+                                                disabled={searchState.options.room <= 1}
                                                 className={styles.optionsCounterBtn}
                                                 onClick={() => handleOption("room", "d")}
                                             >-</button>
-                                            <span>{state.options.room}</span>
+                                            <span>{searchState.options.room}</span>
                                             <button className={styles.optionsCounterBtn}
                                                 onClick={() => handleOption("room", "i")}
                                             >+</button>

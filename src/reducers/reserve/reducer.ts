@@ -1,6 +1,6 @@
-import { IHeaderReducer } from "../../components/Header/Index";
+import { ISearchStateReducer } from "../../components/Header/Index";
 
-export function SearchReducer(state: IHeaderReducer, action: any) {
+export function SearchReducer(state: ISearchStateReducer, action: any) {
 
     switch (action.type) {
         case 'DESTINATION': {

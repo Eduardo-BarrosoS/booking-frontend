@@ -22,6 +22,7 @@ interface Ilocation extends Location {
 export function List() {
 
     const location: Ilocation = useLocation()
+    console.log(location)
     const [reserveInformation, setReserveInformation] = useState({
         destination: location.state.destination,
         date: location.state.date,
