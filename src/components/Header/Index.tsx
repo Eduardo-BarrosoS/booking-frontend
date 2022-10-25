@@ -8,8 +8,12 @@ import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css';
 import styles from "./styles.module.css"
 import { format } from "date-fns";
+import { Navigate, useNavigate } from "react-router-dom";
+import { dateAction, destinationAction, openDateAction, openOptionsAction, optionsAction } from "../../reducers/reserve/action";
+import { SearchReducer } from "../../reducers/reserve/reducer";
 
-interface IHeaderReducer {
+export interface IHeaderReducer {
+    destination: string;
     openDate: boolean;
     date: Range[];
     openOptions: boolean;
@@ -25,15 +29,8 @@ interface IHeaderProps {
 }
 
 export function Header({ type }: IHeaderProps) {
-    const [date, setDate] = useState<Range[]>([
-        {
-            startDate: new Date(),
-            endDate: new Date(),
-            key: 'selection'
-        }
-    ]);
-
     const initialValuesReducer = {
+        destination: '',
         openDate: false,
         date: [
             {
@@ -50,48 +47,20 @@ export function Header({ type }: IHeaderProps) {
         }
     }
 
-    const [state, dispatch] = useReducer((state: IHeaderReducer, action: any) => {
-        switch (action.type) {
-            case 'OPEN_DATE': {
-                return { ...state, openDate: !state.openDate }
-                // return  state.openDate = !state.openDate as boolean;
-            }
-            case 'DATE': {
-                return { ...state, date: [action.payload.dateSelected] };
-            }
-            case 'OPEN_OPTIONS': {
-                return { ...state, openOptions: !state.openOptions }
-            }
-            case 'OPTIONS': {
-                switch (action.payload.name) {
-                    case 'adult':
-                        return action.payload.operation === "i" ?
-                            { ...state, adult: state.options.adult++ } :
-                            { ...state, adult: state.options.adult-- }
-                    case 'children':
-                        return action.payload.operation === "i" ?
-                            { ...state, children: state.options.children++ } :
-                            { ...state, children: state.options.children-- }
-                    case 'room': {
-                        return action.payload.operation === "i" ?
-                            { ...state, room: state.options.room++ } :
-                            { ...state, room: state.options.room-- }
-                    }
-                    default:
-                        throw new Error();
-                }
-            }
-            default:
-                throw new Error();
-        }
-        return state
-    }, initialValuesReducer);
+    const [state, dispatch] = useReducer( SearchReducer, initialValuesReducer);
+
+    const navigate = useNavigate()
 
     function handleOption(name: string, operation: string) {
-        dispatch({
-            type: 'OPTIONS',
-            payload: { name: name, operation: operation }
-        })
+        dispatch( optionsAction(name, operation) )
+    }
+
+    function handleSearch () {
+        navigate("/hotels", { state: { 
+            destination: state.destination, 
+            date: state.date,
+            options: state.options,
+        } } )
     }
 
     return (
@@ -132,33 +101,39 @@ export function Header({ type }: IHeaderProps) {
                         <div className={styles.headerSearch}>
                             <div className={styles.headerSearchItem}>
                                 <FontAwesomeIcon icon={faBed} className={styles.headerIcon} />
-                                <input type="text" placeholder="Where are you going?"
-                                    className={styles.headerSearchInput} />
+                                <input 
+                                    type="text" 
+                                    placeholder="Where are you going?"
+                                    className={styles.headerSearchInput}
+                                    onChange={(e) => {
+                                        dispatch( destinationAction(e.target.value as string) )
+                                    }}
+                                     />
                             </div>
                             <div className={styles.headerSearchItem}>
 
                                 <FontAwesomeIcon icon={faCalendarDays} className={styles.headerIcon} />
-                                <span onClick={() => {
-                                    dispatch({ type: "OPEN_DATE" })
-                                }} className={styles.headerSearchText}> {format(state.date[0].startDate!, 'MM/dd/yyyy')} to {format(state.date[0].endDate!, 'MM/dd/yyyy')} </span>
-                                {state.openDate && <div onClick={() => dispatch({ type: "OPEN_DATE" })} className={styles.closeDateRange}></div>}
+                                <span onClick={() => dispatch( openDateAction()) } 
+                                className={styles.headerSearchText}> {format(state.date[0].startDate!, 'MM/dd/yyyy')} to {format(state.date[0].endDate!, 'MM/dd/yyyy')} </span>
+                                {state.openDate && <div onClick={() => dispatch( openDateAction())} className={styles.closeDateRange}></div>}
                                 {state.openDate && <DateRange
                                     className={styles.date}
                                     editableDateInputs={true}
-                                    onChange={item => { dispatch({ type: "DATE", payload: { dateSelected: item.selection } }) }}
+                                    onChange={item => { dispatch( dateAction( item.selection ) ) }}
                                     moveRangeOnFirstSelection={false}
                                     ranges={state.date}
+                                    minDate={new Date()}
                                 />}
 
                             </div>
                             <div className={styles.headerSearchItem}>
                                 <FontAwesomeIcon icon={faPerson} className={styles.headerIcon} />
                                 <span
-                                    onClick={() => dispatch({ type: "OPEN_OPTIONS" })}
+                                    onClick={() => dispatch( openOptionsAction() )}
                                     className={styles.headerSearchText}>
                                     {` ${state.options.adult} adult ${state.options.children} children ${state.options.room} room`}
                                 </span>
-                                {state.openOptions && <div onClick={() => dispatch({ type: "OPEN_OPTIONS" })} className={styles.closeDateRange}></div>}
+                                {state.openOptions && <div onClick={() => dispatch( openOptionsAction() )} className={styles.closeDateRange}></div>}
                                 {state.openOptions && <div className={styles.options}>
                                     <div className={styles.optionsItem} >
                                         <span>Adult</span>
@@ -208,8 +183,7 @@ export function Header({ type }: IHeaderProps) {
 
                             </div>
                             <div className={styles.headerSearchItem}>
-                                <button className={styles.headerBtn}> Search </button>
-
+                                <button className={styles.headerBtn} onClick={ () => handleSearch()}> Search </button>
                             </div>
                         </div>
                     </>
