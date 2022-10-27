@@ -1,4 +1,4 @@
-import { faLocationDot } from "@fortawesome/free-solid-svg-icons"
+import { faCircleArrowLeft, faCircleArrowRight, faCircleXmark, faFileCircleXmark, faLocationDot } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useState } from "react"
 import { Footer } from "../../components/Footer"
@@ -14,10 +14,7 @@ export function Hotel() {
 
     const photos = [
         {
-            src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPE6uHU7QQ-f-Mecg1XrLTEfoderY1Uoj0kAbEbPdFhuWqoLYFFJ-yZNW8vzo6MQhP-Ag&usqp=CAU"
-        },
-        {
-            src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQHjZW7lIiV9GRcxKvxxlL6ZYgpXAYjlZdtifFmM-UTA3zYMG4OfzxlT-bnZ_74FhWtCg&usqp=CAU"
+            src: "https://images.unsplash.com/photo-1628745277895-106fbff3caf7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
         },
         {
             src: "https://www.residence-brehova.com/images/one-bedroom/detail/large/living_3.jpg"
@@ -40,18 +37,32 @@ export function Hotel() {
         setslideNumber(i)
         setOpen(true)
     }
-    function handleclose(i: number) {
-        setslideNumber(i)
-        setOpen(true)
+    function handleMove(direction: string) {
+        let newSlideNumber
+
+        if( direction === "l" && slideNumber >= 0 ) newSlideNumber = slideNumber === 0 ? 5 : slideNumber - 1
+        else newSlideNumber = slideNumber === 5 ? 0 : slideNumber + 1
+        setslideNumber(newSlideNumber)
     }
     return (
         <div>
             <Navbar />
             <Header type="list" />
             <div className={styles.hotelContainer}>
-                { open && <div className={styles.slider}>
-                    {/* <FontAwesomeIcon icon={} /> */}
-                </div>}
+                {open && 
+                    <div className={styles.slider}>
+
+                        <FontAwesomeIcon onClick={() => setOpen(false)} className={styles.close} icon={faCircleXmark} />
+                        <FontAwesomeIcon icon={faCircleArrowLeft} className={styles.arrow} onClick={() => handleMove("l")}/>
+
+                        <div className={styles.sliderWrapper}>
+                            <img className={styles.sliderImg}
+                                src={photos[slideNumber].src} alt="" />
+                        </div>
+
+                        <FontAwesomeIcon icon={faCircleArrowRight} className={styles.arrow} onClick={() => handleMove("r")}/>
+                    </div>
+                }
                 <div className={styles.hotelWrapper}>
                     <h1 className={styles.hotelTitle} >Grand Hotel</h1>
                     <button className={styles.hotelBookNow}> Reserve or Book Now!</button>
@@ -69,7 +80,10 @@ export function Hotel() {
                         {
                             photos.map((photo, index) => {
                                 return (
-                                    <img onClick={() => handleOpen(index)} src={photo.src} alt="" className={styles.hotelImg} />
+                                    <div className={styles.hotelImgWrapper}>
+                                        <img key={index * 43} onClick={() => handleOpen(index)} src={photo.src} alt="" className={styles.hotelImg} />
+
+                                    </div>
                                 )
                             })
                         }
@@ -104,7 +118,9 @@ export function Hotel() {
                     </div>
                 </div>
                 <MailList />
-                <Footer />
+                <div className={styles.footerContainer}>
+                    <Footer />
+                </div>
             </div>
         </div>
     )
