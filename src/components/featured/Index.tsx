@@ -1,6 +1,7 @@
 import styles from "./styles.module.css"
 
 
+
 export function Featured() {
     return ( 
         <div className={styles.featured}>
