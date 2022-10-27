@@ -10,6 +10,7 @@ import { format } from "date-fns";
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css';
 import { SearchContext } from "../../contexts/SearchContext";
+import { SearchItem } from "../../components/SearchItem/Index";
 
 interface Ilocation extends Location {
     state: {
@@ -101,7 +102,11 @@ export function List() {
                         </div>
                         <button>Search</button>
                     </div>
-                    <div className={styles.listResult}></div>
+                    <div className={styles.listResult}>
+                        <SearchItem />
+                        <SearchItem />
+                        <SearchItem />
+                    </div>
                 </div>
             </div>
         </div>
