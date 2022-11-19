@@ -1,8 +1,14 @@
+import { useFetch } from "../../hooks/useFetch"
 import styles from "./styles.module.css"
 
 
 
 export function Featured() {
+
+
+    const {data, loading, error, reFetch} = useFetch("/hotels/countByCity?cities=berling,london")
+
+    console.log(data)
     return ( 
         <div className={styles.featured}>
             <div className={styles.featuredItem}>
